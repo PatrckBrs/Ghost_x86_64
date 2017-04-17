@@ -21,6 +21,7 @@ RUN apt-get -y remove wget unzip && \
 
 RUN chown www-data:www-data ghost
 RUN chown www-data:www-data -R ghost/*
+# Workaround NPM
 RUN cd $(npm root -g)/npm \
   && npm install fs-extra \
   && sed -i -e s/graceful-fs/fs-extra/ -e s/fs\.rename/fs.move/ ./lib/utils/rename.js
