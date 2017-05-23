@@ -3,7 +3,7 @@ FROM node:6.9-wheezy
 
 LABEL maintainer "Patrick Brunias <patrick@brunias.org>"
 
-ENV GHOST_VERSION=0.11.7
+ENV GHOST_VERSION=0.11.9
 
 USER root
 # Update sources && install packages
