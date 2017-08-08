@@ -2,6 +2,7 @@ FROM node:6.9-wheezy
 
 LABEL maintainer "Patrick Brunias <patrick@brunias.org>"
 
+ENV GHOST_VERSION=1.5.0
 ENV NPM_CONFIG_LOGLEVEL warn
 
 USER root
