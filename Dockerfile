@@ -3,7 +3,8 @@ FROM node:6.9-wheezy
 
 LABEL maintainer "Patrick Brunias <patrick@brunias.org>"
 
-ENV GHOST_VERSION=0.11.9
+ENV GHOST_VERSION=1.5.0
+ENV NPM_CONFIG_LOGLEVEL warn
 
 USER root
 # Update sources && install packages
@@ -19,27 +20,26 @@ unzip Ghost-${GHOST_VERSION}.zip -d ghost
 RUN apt-get -y remove wget unzip && \
     rm -rf /var/lib/apt/lists/*
 
-RUN chown www-data:www-data ghost
-RUN chown www-data:www-data -R ghost/*
-# Workaround NPM
-RUN cd $(npm root -g)/npm \
-  && npm install fs-extra \
-  && sed -i -e s/graceful-fs/fs-extra/ -e s/fs\.rename/fs.move/ ./lib/utils/rename.js
-RUN npm install pm2 -g
+RUN addgroup www-data
+RUN adduser ghost -G www-data -S /bin/bash
+RUN chown ghost:www-data .
+
+RUN ghost install local --no-start
+
+USER ghost
 
 WORKDIR /var/www/ghost
-RUN /bin/bash -c "time (npm install sqlite3)"
-RUN npm install
+
+RUN ghost install local --no-start
 
 EXPOSE 2368
-
-ENV NODE_ENV production
-
-RUN sed -e s/127.0.0.1/0.0.0.0/g ./config.example.js > ./config.js
-RUN sed -i s/my-ghost-blog.com/www.codexatomos.org/g config.js
+EXPOSE 2369
 
 VOLUME ["/var/www/ghost/content/apps"]
 VOLUME ["/var/www/ghost/content/data"]
 VOLUME ["/var/www/ghost/content/images"]
 
-CMD ["pm2", "start", "index.js", "--name", "Ghost", "--no-daemon"]
+ENV NODE_ENV production
+RUN sed -ie s/127.0.0.1/0.0.0.0/g config.development.json
+
+CMD ["ghost", "run", "--development", "--ip", "0.0.0.0"]
