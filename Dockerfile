@@ -20,7 +20,7 @@ unzip Ghost-${GHOST_VERSION}.zip -d ghost
 RUN apt-get -y remove wget unzip && \
     rm -rf /var/lib/apt/lists/*
     
-RUN adduser ghost -S /bin/bash
+RUN adduser ghost
 RUN addgroup ghost www-data
 RUN chown ghost:www-data .
 
