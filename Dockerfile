@@ -16,6 +16,7 @@ RUN npm install -g ghost-cli
 RUN useradd ghost
 RUN addgroup ghost www-data
 RUN chown ghost:www-data .
+RUN chown -R $USER:$(id -gn $USER) /home/ghost/.config
 
 RUN ghost install local --no-start
 
