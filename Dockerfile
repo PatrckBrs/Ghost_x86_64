@@ -1,4 +1,4 @@
-# New version update 0.11.4
+# New version update 1.5.0
 FROM node:6.9-wheezy
 
 LABEL maintainer "Patrick Brunias <patrick@brunias.org>"
@@ -20,7 +20,7 @@ unzip Ghost-${GHOST_VERSION}.zip -d ghost
 RUN apt-get -y remove wget unzip && \
     rm -rf /var/lib/apt/lists/*
     
-RUN adduser ghost -G www-data -S /bin/bash
+RUN adduser ghost -g www-data -S /bin/bash
 RUN chown ghost:www-data .
 
 RUN ghost install local --no-start
